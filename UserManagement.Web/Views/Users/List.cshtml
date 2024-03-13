@@ -1,0 +1,348 @@
+﻿@model UserManagement.Web.Models.Users.UserListViewModel
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<h2>User List</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Forename</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>DateOfBirth</th>
+                <th>Account Active</th>
+                <th style="width: 1px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @item.Id
+                    </td>
+                    <td>
+                        @item.Forename
+                    </td>
+                    <td>
+                        @item.Surname
+                    </td>
+                    <td>
+                        @item.Email
+                    </td>
+                    <td>
+                        @item.DateOfBirth
+                    </td>
+                    <td>
+                        @(item.IsActive ? "Yes" : "No")
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false" id="btnToggleActions">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnToggleActions">
+                                <li><a class="dropdown-item" id="ViewUser" onclick="ViewUser(@item.Id)" data-toggle="modal"
+                                        data-target="#modal-lg-view">View</a></li>
+                                <li><a class="dropdown-item" id="EditUserView" onclick="EditUserView(@item.Id)"
+                                        data-toggle="modal" data-target="#modal-lg-edit">Edit</a></li>
+                                <li><a class="dropdown-item" id="btn_DeleteUser" onclick="DeleteUser(@item.Id)">Delete</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <div class="btn-group" role="group">
+        <a asp-controller="Users" asp-action="List" asp-route-opt="0" class="btn btn-default"
+            onclick="SendActionLog('ShowAll')">Show All</a>
+        <a asp-controller="Users" asp-action="List" asp-route-opt="1" class="btn btn-default"
+            onclick="SendActionLog('ActiveOnly')">Active Only</a>
+        <a asp-controller="Users" asp-action="List" asp-route-opt="2" class="btn btn-default"
+            onclick="SendActionLog('NonActive')">Non Active</a>
+    </div>
+
+    <button type="button" class="btn btn-primary float-end" data-toggle="modal" data-target="#exampleModalCenter">
+        Add User
+    </button>
+
+    <!-- Large modal for View -->
+    <div class="modal fade bd-example-modal-lg" id="modal-lg-view" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">View User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Forename</label>
+                        <input type="text" class="form-control" id="View-Forename" name="Forename" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>Surname</label>
+                        <input type="text" class="form-control" id="View-Surname" name="Surname" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="View-Email" name="Email" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>DateOfBirth</label>
+                        <input type="text" class="form-control" id="View-DateOfBirth" name="DateOfBirth" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>Account Active</label><br>
+                        <input type="text" class="form-control" id="View-IsActive" name="IsActive" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="SendActionLog('CreateCancel')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Forename</label>
+                        <input type="text" class="form-control" id="Create-Forename" name="Forename" />
+                    </div>
+                    <div class="form-group">
+                        <label>Surname</label>
+                        <input type="text" class="form-control" id="Create-Surname" name="Surname" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="Create-Email" name="Email" />
+                    </div>
+                    <div class="form-group">
+                        <label>DateOfBirth</label>
+                        <input type="text" class="form-control" id="Create-DateOfBirth" name="DateOfBirth" />
+                    </div>
+                    <div class="form-group">
+                        <label>Account Active</label><br>
+                        <input type="radio" id="IsActiveT" name="IsActive" value="true">
+                        <label for="IsActiveT">Yes</label>
+                        <input type="radio" id="IsActiveF" name="IsActive" value="false">
+                        <label for="IsActiveF">No</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onclick="SendActionLog('CreateCancel')">Close</button>
+                    <input type="submit" class="btn btn-primary" onclick="CreateUser()" value="Confirm">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Large modal for Edit -->
+    <div class="modal fade bd-example-modal-lg" id="modal-lg-edit" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="SendActionLog('EditCancel', document.getElementById('Edit-Id').value)">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="form-control" id="Edit-Id" class="form-control" name="Id" />
+                    <div class="form-group">
+                        <label>Forename</label>
+                        <input type="text" class="form-control" id="Edit-Forename" class="form-control"
+                            required="required" name="Forename" />
+                    </div>
+                    <div class="form-group">
+                        <label>Surname</label>
+                        <input type="text" class="form-control" id="Edit-Surname" class="form-control"
+                            required="required" name="Surname" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" id="Edit-Email" class="form-control" required="required"
+                            name="Email" />
+                    </div>
+                    <div class="form-group">
+                        <label>DateOfBirth</label>
+                        <input type="text" class="form-control" id="Edit-DateOfBirth" class="form-control"
+                            required="required" name="DateOfBirth" />
+                    </div>
+                    <div class="form-group">
+                        <label>Account Active</label><br>
+                        <input type="text" class="form-control" id="Edit-IsActive" class="form-control"
+                            required="required" name="IsActive" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onclick="SendActionLog('EditCancel', document.getElementById('Edit-Id').value)">Close</button>
+                    <input type="submit" class="btn btn-primary" onclick="EditUser()" value="Confirm Edit">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            var Did, Vid, Eid, type;
+            //HTML Get
+            function ViewUser(Vid) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "JSON",
+                    url: "https://localhost:7084/users/GetUser?Vid=" + Vid,
+                    success: function (items) {
+                        SendActionLog("View", Vid);
+                        /*for (var key in items) {
+                            console.log(key + ": " + items[key]); // Log each property and its value
+                        }*/
+                        $("#View-Forename").val(items.forename);
+                        $("#View-Surname").val(items.surname);
+                        $("#View-Email").val(items.email);
+                        $("#View-DateOfBirth").val(items.dateOfBirth);
+                        $("#View-IsActive").val(items.isActive);
+                    }
+                })
+            }
+
+            function EditUserView(Eid) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "JSON",
+                    url: "https://localhost:7084/users/EditUserView?Eid=" + Eid,
+                    success: function (items) {
+                        SendActionLog("EditUserView", Eid);
+                        $("#Edit-Id").val(items.id);
+                        $("#Edit-Forename").val(items.forename);
+                        $("#Edit-Surname").val(items.surname);
+                        $("#Edit-Email").val(items.email);
+                        $("#Edit-DateOfBirth").val(items.dateOfBirth);
+                        $("#Edit-IsActive").val(items.isActive);
+                    }
+                })
+            }
+
+
+
+            function EditUser() {
+                if ($("#Edit-Id").val() != null && $("#Edit-Id").val() != "" && $("#Edit-Forename").val() != null && $("#Edit-Forename").val() != "" && $("#Edit-Surname").val() != null && $("#Edit-Surname").val() != "" && $("#Edit-Email").val() != null && $("#Edit-Email").val() != "" && $("#Edit-DateOfBirth").val() != null && $("#Edit-DateOfBirth").val() != "" && $("#Edit-IsActive").val() != null && $("#Edit-IsActive").val() != "") {
+                    var user = {
+                        Id: $("#Edit-Id").val(),
+                        Forename: $("#Edit-Forename").val(),
+                        Surname: $("#Edit-Surname").val(),
+                        Email: $("#Edit-Email").val(),
+                        DateOfBirth: $("#Edit-DateOfBirth").val(),
+                        IsActive: $("#Edit-IsActive").val() == "true" ? true : false
+                    }
+
+                    $.ajax({
+                        type: "Put",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "https://localhost:7084/users/EditUser",
+                        data: JSON.stringify(user),
+                        success: function () {
+                            SendActionLog("Edit", user.Id);
+                            alert("User(ID:" + user.Id + ")'s Data Updated!!");
+                            location.reload();
+                        }
+                    })
+                } else {
+                    alert("Please input all data to complete the action!");
+                }
+            }
+
+            function DeleteUser(Did) {
+                let text = "Confirm Delete User: " + Did + " ?";
+                if (confirm(text) != true) {
+                    SendActionLog("DeleteCancel", Did);
+                    text = "Delete Action Canceled!";
+                    alert(text);
+                } else {
+                    $.ajax({
+                        type: "DELETE",
+                        dataType: "json",
+                        url: "https://localhost:7084/users/DeleteUser?Did=" + Did,
+                        success: function () {
+                            SendActionLog("Delete", Did);
+                            alert("User: " + Did + " Deleted!!");
+                            location.reload();
+                        }
+                    })
+                }
+            }
+
+            function CreateUser() {
+                if ($("#Create-Forename").val() != null && $("#Create-Forename").val() != "" && $("#Create-Surname").val() != null && $("#Create-Surname").val() != "" && $("#Create-Email").val() != null && $("#Create-Email").val() != "" && $("#Create-DateOfBirth").val() != null && $("#Create-DateOfBirth").val() != "" && $('input[name="IsActive"]:checked').length != 0) {
+                    var user = {
+                        Forename: $("#Create-Forename").val(),
+                        Surname: $("#Create-Surname").val(),
+                        Email: $("#Create-Email").val(),
+                        DateOfBirth: $("#Create-DateOfBirth").val(),
+                        IsActive: $('input[name="IsActive"]:checked').val() == "true" ? true : false
+                    }
+                    //alert(JSON.stringify(user));
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(user),
+                        url: "https://localhost:7084/users/CreateUser",
+                        success: function () {
+                            SendActionLog("Create");
+                            alert("User: " + user.Forename + " Created!!");
+                            location.reload();
+                        }
+                    })
+                } else {
+                    alert("Please input all data to complete the action!");
+                }
+            }
+
+            function SendActionLog(type, id = 0) {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    url: "https://localhost:7084/users/SendActionLog?type=" + type + "&id=" + id,
+                    success: function () {
+                    }
+                });
+            }
+
+
+        </script>
+    }

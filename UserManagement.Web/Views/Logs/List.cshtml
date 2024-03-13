@@ -1,0 +1,37 @@
+@model UserManagement.Web.Models.Users.LogInfoViewModel
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Log ID</th>
+                <th>Action</th>
+                <th>Action Date time</th>
+                <th style="width: 1px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Logs.Count() == 0)
+            {
+                <p>Don't have Action Yet</p>
+            }
+            else
+            {
+                @foreach (var log in Model.Logs) 
+                {
+                    <tr>
+                        <td>
+                            @log.LogId 
+                        </td>
+                        <td>
+                            @log.Action 
+                        </td>
+                        <td>
+                            @log.LogDatetime
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

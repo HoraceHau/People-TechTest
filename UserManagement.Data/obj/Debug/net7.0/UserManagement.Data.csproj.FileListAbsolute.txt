@@ -1,0 +1,13 @@
+C:\Users\horac\Git\TechTest\UserManagement.Data\bin\Debug\net7.0\UserManagement.Data.deps.json
+c:\Users\horac\Git\TechTest\UserManagement.Data\bin\Debug\net7.0\UserManagement.Data.dll
+c:\Users\horac\Git\TechTest\UserManagement.Data\bin\Debug\net7.0\UserManagement.Data.pdb
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.csproj.AssemblyReference.cache
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.AssemblyInfoInputs.cache
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.AssemblyInfo.cs
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.csproj.CoreCompileInputs.cache
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.sourcelink.json
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.dll
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\refint\UserManagement.Data.dll
+c:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\UserManagement.Data.pdb
+C:\Users\horac\Git\TechTest\UserManagement.Data\obj\Debug\net7.0\ref\UserManagement.Data.dll
